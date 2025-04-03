@@ -15,5 +15,5 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "requests"
+    "httpx"
 ]

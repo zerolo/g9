@@ -1,5 +1,4 @@
-import requests
-import json
+import httpx
 
 from .constants import LOGIN_URL, INVOICES_URL, CONTRACTS_URL, ELECTRICITY_CONSUMPTION_URL, GAS_CONSUMPTION_URL
 
@@ -18,7 +17,9 @@ class G9:
             'username': self.username,
             'password': self.password
         }
-        response = requests.post(LOGIN_URL, data=json.dumps(data), headers=headers)
+        print("Logging in...", LOGIN_URL)
+        print("Logging in with username:", self.username)
+        response = httpx.post(LOGIN_URL, json=data, headers=headers)
         if response.status_code == 200:
             result = response.json()
             data = result.get('data')
@@ -35,7 +36,7 @@ class G9:
         }
 
     def get_contracts(self):
-        response = requests.get(CONTRACTS_URL, headers=self._get_headers())
+        response = httpx.get(CONTRACTS_URL, headers=self._get_headers())
         if response.status_code == 200:
             result = response.json()
             contracts = result.get('contracts')
@@ -48,7 +49,7 @@ class G9:
             params = {
                 "contractId": contract_id
             }
-            response = requests.get(INVOICES_URL, params=params, headers=self._get_headers())
+            response = httpx.get(INVOICES_URL, params=params, headers=self._get_headers())
             if response.status_code == 200:
                 result = response.json()
                 invoice = result.get('invoice')
@@ -60,7 +61,7 @@ class G9:
         params = {
             "contractId": contract_id
         }
-        response = requests.get(ELECTRICITY_CONSUMPTION_URL, params=params, headers=self._get_headers())
+        response = httpx.get(ELECTRICITY_CONSUMPTION_URL, params=params, headers=self._get_headers())
         if response.status_code == 200:
             result = response.json()
             electricity = result.get('electricity_graph')
@@ -72,7 +73,7 @@ class G9:
         params = {
             "contractId": contract_id
         }
-        response = requests.get(GAS_CONSUMPTION_URL, params=params, headers=self._get_headers())
+        response = httpx.get(GAS_CONSUMPTION_URL, params=params, headers=self._get_headers())
         if response.status_code == 200:
             result = response.json()
             gas = result.get('gas_graph')

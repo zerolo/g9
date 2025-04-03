@@ -7,6 +7,6 @@ setup(
     package_dir={'': '.'},
     packages=find_namespace_packages(where='.'),
     install_requires=[
-        "requests==2.32.0"
+        "httpx>=0.24.0",
     ]
 )
