@@ -14,6 +14,9 @@ class G9:
         self._session = session
         self.contract_id = contract_id
 
+    def get_contract_id(self):
+        return self.contract_id
+
     async def __api_request(self, url: str, method="get", data=None, params=None, headers=None):
         async with getattr(self._session, method)(url, headers=headers or self._get_headers(), json=data,
                                                   params=params, ssl=False) as response:
