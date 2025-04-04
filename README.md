@@ -15,27 +15,31 @@ pip install g9_api_client
 Here is an example of how to use the G9 API Client:
 
 ```python
+import asyncio
+import aiohttp
 from g9_api_client import G9
 
-def main():
-    acc = G9("your_username", "your_password")
+async def main():
+    session = aiohttp.ClientSession()
+    acc = G9(session,"your_username", "your_password")
 
-    if acc.login():
+    if await acc.login():
         print("Login successful")
-        contracts = acc.get_contracts()
+        contracts = await acc.get_contracts()
         if contracts:
             contract_id = contracts[0].get('id')
             print("Contracts:", contracts)
-            print("Last Invoice:", acc.get_last_invoice(contract_id))
-            print("Last Electricity Consumption:", acc.get_last_electricity_consumption(contract_id))
-            print("Last Gas Consumption:", acc.get_last_gas_consumption(contract_id))
+            print("Last Invoice:", await acc.get_last_invoice(contract_id))
+            print("Last Electricity Consumption:", await acc.get_last_electricity_consumption(contract_id))
+            print("Last Gas Consumption:", await acc.get_last_gas_consumption(contract_id))
         else:
             print("No contracts found")
     else:
         print("Login failed")
 
 if __name__ == "__main__":
-    main()
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(main())
 ```
 
 ## Methods
