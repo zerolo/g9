@@ -7,11 +7,12 @@ _LOGGER.setLevel(logging.DEBUG)
 
 
 class G9:
-    def __init__(self, session: aiohttp.ClientSession, username, password):
+    def __init__(self, session: aiohttp.ClientSession, username, password, contract_id=None):
         self.token = None
         self._username = username
         self._password = password
         self._session = session
+        self.contract_id = contract_id
 
     async def __api_request(self, url: str, method="get", data=None, params=None, headers=None):
         async with getattr(self._session, method)(url, headers=headers or self._get_headers(), json=data,
@@ -61,7 +62,9 @@ class G9:
             return contracts
         return None
 
-    async def get_last_invoice(self, contract_id):
+    async def get_last_invoice(self, contract_id=None):
+        if contract_id is None and self.contract_id:
+            contract_id = self.contract_id
         if not self.token:
             _LOGGER.error("Not logged in - token not found")
             raise Exception("Not logged in")
@@ -74,7 +77,9 @@ class G9:
             return invoice
         return None
 
-    async def get_last_electricity_consumption(self, contract_id):
+    async def get_last_electricity_consumption(self, contract_id=None):
+        if contract_id is None and self.contract_id:
+            contract_id = self.contract_id
         if not self.token:
             _LOGGER.error("Not logged in - token not found")
             raise Exception("Not logged in")
@@ -87,7 +92,9 @@ class G9:
             return electricity
         return None
 
-    async def get_last_gas_consumption(self, contract_id):
+    async def get_last_gas_consumption(self, contract_id=None):
+        if contract_id is None and self.contract_id:
+            contract_id = self.contract_id
         if not self.token:
             _LOGGER.error("Not logged in - token not found")
             raise Exception("Not logged in")
